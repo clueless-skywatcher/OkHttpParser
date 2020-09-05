@@ -1,0 +1,374 @@
+----------------------------------------
+Method: GET
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/user/details/
+Header: {}
+Payload: {}
+
+Method: POST
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/otp/send/
+Header: {
+    "Content-Type": "application/json; charset=UTF-8",
+    "Content-Length": "30"
+}
+Payload: {
+    "mobile_number": "MY+PHONE_NUMBER"
+}
+
+Method: POST
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/otp/verify/
+Header: {
+    "Content-Type": "application/json; charset=UTF-8",
+    "Content-Length": "99"
+}
+Payload: {
+    "mobile_number": "MY+PHONE_NUMBER",
+    "otp": "4394",
+    "otp_session_id": "4183865a-edd4-11ea-9fa5-0200cd936042"
+}
+
+Method: POST
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/teacher/create/
+Header: {
+    "Content-Type": "text/plain; charset=utf-8",
+    "Content-Length": "11",
+    "Content-Disposition": "form-data; name=\"first_name\"",
+    "Content-Transfer-Encoding": "binary"
+}
+Payload: "ekta grover"
+
+Method: POST
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/teacher/create/
+Header: {
+    "Content-Type": "application/json; charset=UTF-8",
+    "Content-Length": "2",
+    "Content-Disposition": "form-data; name=\"school_id\"",
+    "Content-Transfer-Encoding": "binary"
+}
+Payload: "-1"
+
+Method: GET
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/class_subject/?teacher_id=92&school_id=1558972
+Header: {}
+Payload: {}
+
+Method: POST
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/class_subject/create/
+Header: {
+    "Content-Type": "application/json; charset=UTF-8",
+    "Content-Length": "113"
+}
+Payload: {
+    "class_subject_list": [
+        {
+            "grade": 1,
+            "section": "HH",
+            "subjects": [
+                "Hindi",
+                "JJ"
+            ]
+        }
+    ],
+    "school_id": 1558972,
+    "teacher_id": 92
+}
+
+Method: GET
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/class_subject/?teacher_id=92&school_id=1558972
+Header: {}
+Payload: {}
+
+Method: GET
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/doubt/?teacher_id=92&subject_id=443
+Header: {}
+Payload: {}
+
+Method: GET
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/notes/?teacher_id=92&class_subject_id=443
+Header: {}
+Payload: {}
+
+Method: GET
+Endpoint: http://MY_SERVER_NAME:8000/api/v1/homework/?teacher_id=92&class_subject_id=443
+Header: {}
+Payload: {}
+
+----------------------------------------
+Status Code: 401
+Status Code Name: Unauthorized
+Header: {
+    "Date": "Thu, 03 Sep 2020 10:57:19 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "WWW-Authenticate": "Token",
+    "Vary": "Accept",
+    "Allow": "GET, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "58",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "detail": "Authentication credentials were not provided."
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 10:57:27 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "POST, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "111",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "Status": "Success",
+        "session_id": "4183865a-edd4-11ea-9fa5-0200cd936042"
+    },
+    "message": "OTP Sent"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 10:57:34 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "POST, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "471",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "Status": "Success",
+        "Details": "OTP Matched",
+        "user": {
+            "id": 169,
+            "status": "VERIFIED",
+            "last_login": null,
+            "username": "MY+PHONE_NUMBER",
+            "email": "",
+            "is_staff": false,
+            "date_joined": "2020-09-03T10:57:34.131610Z",
+            "first_name": "",
+            "last_name": "",
+            "phone_number": "MY+PHONE_NUMBER"
+        },
+        "auth_token": "b33cd34e4dab7b5a8ea89f2cc1498bdce06989a1",
+        "existing_personas": [],
+        "possible_personas": [
+            "SCHOOL",
+            "TEACHER",
+            "PARENT",
+            "STUDENT",
+            "VOLUNTEER"
+        ]
+    },
+    "message": "OTP Verified, User Created/Fetched"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 10:58:51 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "POST, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "152",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "name": "TEACHER",
+        "teacher_data": {
+            "id": 92,
+            "gender": "FEMALE",
+            "photo": null,
+            "user": 169,
+            "name": "ekta grover"
+        }
+    },
+    "message": "Teacher created"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 10:59:01 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "POST, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "262",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "name": "TEACHER",
+        "teacher_data": {
+            "id": 92,
+            "gender": "FEMALE",
+            "photo": null,
+            "user": 169,
+            "name": "ekta grover"
+        },
+        "school_data": {
+            "id": 1558972,
+            "name": "this is a test ",
+            "state": null,
+            "district": null,
+            "pin_code": null
+        }
+    },
+    "message": "Teacher mapped with school"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 10:59:04 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "GET, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "77",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "class_subjects": []
+    },
+    "message": "Existing Class subject(s)"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 11:04:56 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "POST, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "462",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "classes": [
+            {
+                "id": 232,
+                "grade": 1,
+                "section": "HH",
+                "share_code": "15589728RG50C6F",
+                "school": 1558972
+            }
+        ],
+        "class_subjects": {
+            "232": [
+                {
+                    "id": 443,
+                    "class_data": {
+                        "id": 232,
+                        "grade": 1,
+                        "section": "HH",
+                        "share_code": "15589728RG50C6F",
+                        "school": 1558972
+                    },
+                    "subject": "Hindi",
+                    "gradeSection": 232
+                },
+                {
+                    "id": 444,
+                    "class_data": {
+                        "id": 232,
+                        "grade": 1,
+                        "section": "HH",
+                        "share_code": "15589728RG50C6F",
+                        "school": 1558972
+                    },
+                    "subject": "JJ",
+                    "gradeSection": 232
+                }
+            ]
+        }
+    },
+    "message": "Classes and Subjects"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 11:04:56 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "GET, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "363",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": {
+        "class_subjects": [
+            {
+                "id": 443,
+                "class_data": {
+                    "id": 232,
+                    "grade": 1,
+                    "section": "HH",
+                    "share_code": "15589728RG50C6F",
+                    "school": 1558972
+                },
+                "subject": "Hindi",
+                "gradeSection": 232
+            },
+            {
+                "id": 444,
+                "class_data": {
+                    "id": 232,
+                    "grade": 1,
+                    "section": "HH",
+                    "share_code": "15589728RG50C6F",
+                    "school": 1558972
+                },
+                "subject": "JJ",
+                "gradeSection": 232
+            }
+        ]
+    },
+    "message": "Existing Class subject(s)"
+}
+
+Status Code: 200
+Status Code Name: OK
+Header: {
+    "Date": "Thu, 03 Sep 2020 11:05:31 GMT",
+    "Server": "WSGIServer/0.2 CPython/3.7.6",
+    "Content-Type": "application/json",
+    "Vary": "Accept",
+    "Allow": "GET, OPTIONS",
+    "X-Frame-Options": "DENY",
+    "Content-Length": "39",
+    "X-Content-Type-Options": "nosniff"
+}
+Payload: {
+    "code": 0,
+    "data": [],
+    "message": "Doubts"
+}
