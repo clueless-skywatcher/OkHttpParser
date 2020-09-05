@@ -17,6 +17,14 @@ class OkHttpResponseObject:
 		self.status_code_name = status_code_name
 
 class OkHttpParser:
+	'''
+	Main parsing class for Android log files
+	Usage:
+	>>> from okhttpparser import OkHttpParser
+	>>> okhttp = OkHttpParser('file.txt', lines = 2000)
+	>>> okhttp.parse_requests() --> Returns parsed requests
+	>>> okhttp.parse_responses() --> Returns parsed responses
+	'''
 	def __init__(self, logfile, lines = 1000):
 		self.loglines = []
 		with open(logfile, 'r') as f:
@@ -94,23 +102,3 @@ class OkHttpParser:
 				payload = line
 
 		return responses
-
-if __name__ == '__main__':
-	okhttp = OkHttpParser('assignment.txt', lines = 1300)
-	for line in okhttp.loglines:
-		print(line)
-
-	# print("----------------------------------------")
-	# for request in okhttp.parse_requests():
-	# 	print(f"Method: {request.method}")
-	# 	print(f"Endpoint: {request.endpoint}")
-	# 	print(f"Header: {json.dumps(request.header, indent = 4)}")
-	# 	print(f"Payload: {json.dumps(request.payload, indent = 4)}")
-	# 	print()
-	# print("----------------------------------------")
-	# for response in okhttp.parse_responses():
-	# 	print(f"Status Code: {response.status_code}")
-	# 	print(f"Status Code Name: {response.status_code_name}")
-	# 	print(f"Header: {json.dumps(response.header, indent = 4)}")
-	# 	print(f"Payload: {json.dumps(response.payload, indent = 4)}")
-	# 	print()
