@@ -5,7 +5,7 @@ Libraries used:
 - json: For pretty printing JSON objects and dictionaries
 - re: For matching some regular expressions to detect patterns.
 
-Documentation and how it works:
+About the parser:
 - OkHttpParser() makes a parsing object to find necessary patterns to
 find both requests and responses.
   - parse_requests() method returns a list of OkHttpRequestObject instances, each containing
