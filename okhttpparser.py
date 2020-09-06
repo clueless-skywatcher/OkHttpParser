@@ -22,83 +22,94 @@ class OkHttpParser:
 	Usage:
 	>>> from okhttpparser import OkHttpParser
 	>>> okhttp = OkHttpParser('file.txt', lines = 2000)
-	>>> okhttp.parse_requests() --> Returns parsed requests
-	>>> okhttp.parse_responses() --> Returns parsed responses
+	>>> okhttp.parse() --> returns a list of pairs of requests and their
+	corresponding responses
 	'''
-	def __init__(self, logfile, lines = 1000):
+	def __init__(self, logfile, lines = 1400):
 		self.loglines = []
 		with open(logfile, 'r') as f:
 			for line in f.readlines()[:lines]:
 				if 'D/OkHttp' in line:
 					self.loglines.append(line.split('D/OkHttp: ')[1].rstrip())
 
-	def parse_requests(self):
-		header = dict()
-		payload = dict()
+	def parse(self):
+		request_response_bounds = []
+		req_res_start = False
+		x, y = -1, -1
+		for i in range(len(self.loglines)):
+			if self.loglines[i].startswith("-->") and not req_res_start:
+				x = i
+				req_res_start = True
+			if self.loglines[i].startswith("<-- END") and req_res_start:
+				y = i
+				req_res_start = False
+				request_response_bounds.append([x, y])
 
-		requests = []
+		req_res_pair_bounds = []
 
-		request_start = False
+		for rr in request_response_bounds:
+			for i in range(rr[0], rr[1] + 1):
+				if self.loglines[i].startswith("--> END"):
+					req_res_pair_bounds.append([(rr[0], i), (i + 1, rr[1])])
+					break
 
-		for line in self.loglines:
-			if line.startswith("-->"):
-				if not line.startswith("--> END"):
-					request_start = True
-					method = line.split(" ")[1]
-					endpoint = line.split(" ")[2]
-					request = OkHttpRequestObject(endpoint, method)
-				else:
-					request.header = header
-					request.payload = payload
-					request_start = False
-					requests.append(request)
-					header = dict()
-					payload = dict()
+		req_res_pairs = []
 
-			if re.match(r"\w+(?:-\w+)+", line) and request_start:
-				header_key = line.split(": ", 1)[0]
-				header_val = line.split(": ", 1)[1]
-				header[header_key] = header_val
+		for req, res in req_res_pair_bounds:
+			req_method = self.loglines[req[0]].split(" ")[1]
+			req_endpoint = self.loglines[req[0]].split(" ")[2]
 
-			if line.startswith("{") and request_start:
-				payload = json.loads(line)
-			elif not (line.startswith("--") or line.startswith("<--")) and request_start:
-				payload = line
+			request = OkHttpRequestObject(req_endpoint, req_method)
+			req_header = {}
+			req_payload = {}
+			for i in range(req[0] + 1, req[1]):
+				if re.match(r'[@_!#$%^&*()<>?/\|}{~]*\w+(?:-\w+)*:', self.loglines[i]):
+					header_key = self.loglines[i].split(": ", 1)[0]
+					header_val = self.loglines[i].split(": ", 1)[1]
+					req_header[header_key] = header_val
+				if self.loglines[i].startswith("{"):
+					req_payload = json.loads(self.loglines[i])
+				elif not self.loglines[i].startswith("--"):
+					req_payload = self.loglines[i]
+			request.payload = req_payload
+			request.header = req_header
 
-		return requests
+			res_status_code = self.loglines[res[0]].split(" ")[1]
+			res_status_code_name = self.loglines[res[0]].split(" ")[2]
+			res_endpoint = self.loglines[res[0]].split(" ")[3]
+			response = OkHttpResponseObject(res_endpoint, res_status_code, res_status_code_name)
+			res_header = {}
+			res_payload = {}
+			for i in range(res[0] + 1, res[1]):
+				if re.match(r'[@_!#$%^&*()<>?/\|}{~]*\w+(?:-\w+)*:', self.loglines[i]):
+					header_key = self.loglines[i].split(": ", 1)[0]
+					header_val = self.loglines[i].split(": ", 1)[1]
+					res_header[header_key] = header_val
+				if self.loglines[i].startswith("{"):
+					res_payload = json.loads(self.loglines[i])
+				elif not self.loglines[i].startswith("--"):
+					res_payload = self.loglines[i]
+			response.payload = res_payload
+			response.header = res_header
 
-	def parse_responses(self):
-		header = dict()
-		payload = dict()
+			req_res_pairs.append((request, response))
+		return req_res_pairs
 
-		responses = []
-
-		response_start = False
-
-		for line in self.loglines:
-			if line.startswith("<--"):
-				if not line.startswith("<-- END"):
-					response_start = True
-					status_code = line.split(" ")[1]
-					status_code_name = line.split(" ")[2]
-					endpoint = line.split(" ")[3]
-					response = OkHttpResponseObject(endpoint, status_code, status_code_name)
-				else:
-					response.header = header
-					response.payload = payload
-					response_start = False
-					responses.append(response)
-					header = dict()
-					payload = dict()
-
-			if re.match(r"\w+(?:-\w+)*:", line) and response_start:
-				header_key = line.split(": ", 1)[0]
-				header_val = line.split(": ", 1)[1]
-				header[header_key] = header_val
-
-			if line.startswith("{") and response_start:
-				payload = json.loads(line)
-			elif not (line.startswith("--") or line.startswith("-->")) and response_start:
-				payload = line
-
-		return responses
+# if __name__ == '__main__':
+# 	okhttp = OkHttpParser('../input (1).txt')
+# 	for line in okhttp.loglines:
+# 		print(line)
+# 	for req, res in okhttp.parse():
+# 		print("-------------------------------------------")
+# 		print("Request:")
+# 		print(f'Method: {req.method}')
+# 		print(f'Endpoint: {req.endpoint}')
+# 		print(f'Header: {json.dumps(req.header, indent = 4)}')
+# 		print(f'Payload: {json.dumps(req.payload, indent = 4)}')
+# 		print()
+# 		print("Response:")
+# 		print(f'Endpoint: {res.endpoint}')
+# 		print(f'Status Code: {res.status_code}')
+# 		print(f'Status Code Name: {res.status_code_name}')
+# 		print(f'Header: {json.dumps(res.header, indent = 4)}')
+# 		print(f'Payload: {json.dumps(res.payload, indent = 4)}')
